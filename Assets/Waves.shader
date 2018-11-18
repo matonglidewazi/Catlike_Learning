@@ -5,7 +5,7 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
-		_Amplitude("Amplitude", Float) = 1
+		_Steepness("Steepness", Range(0,1)) = 0.5
 		_Wavelength ("Wavelength", Float) = 10
 		_Speed("Speed", Float) = 1
 
@@ -16,7 +16,7 @@
 
 		CGPROGRAM
 		// Physically based Standard lighting model, and enable shadows on all light types
-		#pragma surface surf Standard fullforwardshadows vertex:vert
+		#pragma surface surf Standard vertex:vert addshadow 
 
 		// Use shader model 3.0 target, to get nicer looking lighting
 		#pragma target 3.0
@@ -30,9 +30,9 @@
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
-		float _Amplitude;
 		float _Wavelength;
 		float _Speed;
+		float _Steepness;
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -41,12 +41,15 @@
 			// put more per-instance properties here
 		UNITY_INSTANCING_BUFFER_END(Props)
 
-
+			
 			void vert(inout appdata_full vertexData) {
 				float T = 2 * UNITY_PI / _Wavelength;
-				vertexData.vertex.y = _Amplitude*sin(
-					T*(vertexData.vertex.x - _Speed*_Time.y)
-				);
+				float F = T * (vertexData.vertex.x - _Speed * _Time.y);
+				vertexData.vertex.x += (_Steepness / T) * cos(F);
+				vertexData.vertex.y = (_Steepness / T)*sin(F);
+
+				float3 tangent = normalize(float3(1 - _Steepness*sin(F), _Steepness * cos(F), 0));
+				vertexData.normal = float3(-tangent.y, tangent.x, 0);
 			}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {
