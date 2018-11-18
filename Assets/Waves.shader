@@ -5,9 +5,9 @@
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
-		_Steepness("Steepness", Range(0,1)) = 0.5
-		_Wavelength ("Wavelength", Float) = 10
-		_Speed("Speed", Float) = 1
+		_WaveA("Wave A (dirX, dirY, steepness, wavelength)", Vector) = (0.3,0.8,0.9,10)
+		_WaveB("Wave B (dirX, dirY, steepness, wavelength)", Vector) = (0.3,0.8,0.6,10)
+		_WaveC("Wave C (dirX, dirY, steepness, wavelength)", Vector) = (0.3,0.8,0.3,10)
 
 	}
 	SubShader {
@@ -30,9 +30,35 @@
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
-		float _Wavelength;
-		float _Speed;
-		float _Steepness;
+		float4 _WaveA, _WaveB, _WaveC;
+
+		void generateWave (inout appdata_full vertexData, float4 _Wave, float3 tangent, float3 binormal) {
+			
+			float steepness = _Wave.z;
+			float wavelength = _Wave.w;
+			float T = 2 * UNITY_PI / wavelength;
+			float C = sqrt(9.8 / T);
+			float2 D = normalize(_Wave.xy);
+			float F = T * (dot(D, vertexData.vertex.xz) - C * _Time.y);
+			float A = steepness / T;
+
+			vertexData.vertex.xz += D.xy * (A * cos(F));
+			vertexData.vertex.y = A*sin(F);
+
+			tangent += float3(
+				- D.x * D.x * (steepness*sin(F)),
+				D.x * steepness*cos(F),
+				-D.x * D.y * steepness*sin(F)
+				);
+
+			binormal += float3(
+				-D.x * D.y * steepness*sin(F),
+				D.y * steepness*cos(F),
+				- D.y * D.y * steepness*sin(F)
+				);
+
+		}
+
 
 		// Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
 		// See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -40,16 +66,15 @@
 		UNITY_INSTANCING_BUFFER_START(Props)
 			// put more per-instance properties here
 		UNITY_INSTANCING_BUFFER_END(Props)
-
 			
 			void vert(inout appdata_full vertexData) {
-				float T = 2 * UNITY_PI / _Wavelength;
-				float F = T * (vertexData.vertex.x - _Speed * _Time.y);
-				vertexData.vertex.x += (_Steepness / T) * cos(F);
-				vertexData.vertex.y = (_Steepness / T)*sin(F);
-
-				float3 tangent = normalize(float3(1 - _Steepness*sin(F), _Steepness * cos(F), 0));
-				vertexData.normal = float3(-tangent.y, tangent.x, 0);
+				float3 tangent = float3(1, 0, 0);
+				float3 binormal = float3(0, 0, 1);
+				generateWave(vertexData, _WaveA, tangent, binormal);
+				//generateWave(vertexData, _WaveB, tangent, binormal);
+				//generateWave(vertexData, _WaveC, tangent, binormal);
+				vertexData.normal = normalize(cross(binormal, tangent));
+				
 			}
 
 		void surf (Input IN, inout SurfaceOutputStandard o) {

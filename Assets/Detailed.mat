@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Waves
-  m_Shader: {fileID: 4800000, guid: c1191d33d4f13c54aa7c20fdeda19bcd, type: 3}
+  m_Name: Detailed
+  m_Shader: {fileID: 4800000, guid: 5e8d36f63998cde4393c6199c6e62361, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -34,12 +34,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _DetailTex:
+        m_Texture: {fileID: 2800000, guid: 9a2c797cfb7f2b243ad2b00b0ed82b76, type: 3}
+        m_Scale: {x: 10, y: 10}
+        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 5037e49e9f42efd4781e68b242156d6b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -55,7 +59,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Amplitude: 2
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -69,16 +72,11 @@ Material:
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 1.1
     - _SrcBlend: 1
-    - _Steepness: 0.333
     - _UVSec: 0
-    - _Wavelength: 5.33
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0.28291607, b: 1, a: 1}
-    - _Direction: {r: 0.25, g: 0.16, b: 1.93, a: -2.2}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _DeatilTex_ST: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _WaveA: {r: 10, g: 10, b: 0.38, a: 5}
-    - _WaveB: {r: 10, g: 10, b: 1.11, a: 5.43}
-    - _WaveC: {r: 0.3, g: 0.8, b: 1, a: 3}
+    - _Tint: {r: 1, g: 1, b: 1, a: 1}
