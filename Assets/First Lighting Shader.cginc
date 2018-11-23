@@ -16,6 +16,7 @@ struct VertexData {
 	float4 position : POSITION;
 	float2 uv : TEXCOORD0;
 	float3 normal : NORMAL;
+	float4 tangent : TANGENT;
 };
 
 struct Interpolators {
@@ -23,6 +24,7 @@ struct Interpolators {
 	float2 uv : TEXCOORD0;
 	float3 normal : TEXCOORD1;
 	float3 worldPos : TEXCOORD2;
+	float4 tangent : TEXCOORD3;
 
 	#if defined(VERTEXLIGHT_ON)
 		float3 vertexLightColor : TEXCOORD3;
